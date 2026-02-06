@@ -1,59 +1,92 @@
-# Memoria
+# Memoria Monorepo
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.3.
+A bun workspace monorepo containing a frontend Angular application and a backend Fastify server.
 
-## Development server
+## Project Structure
 
-To start a local development server, run:
-
-```bash
-ng serve
+```
+memoria/
+├── apps/
+│   ├── front/        # Angular frontend application
+│   └── back/         # Fastify backend server
+├── bunfig.toml       # Bun workspace configuration
+├── package.json      # Root workspace package.json
+└── tsconfig.json     # Shared TypeScript config (base)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Apps
 
-## Code scaffolding
+### Front (`apps/front`)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Angular 21 application with Tailwind CSS and ngzard UI components.
 
-```bash
-ng generate component component-name
-```
+**Scripts:**
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- `bun start` - Start Angular dev server (port 4200)
+- `bun build` - Build for production
+- `bun test` - Run tests
+- `bun watch` - Watch mode
 
-```bash
-ng generate --help
-```
+### Back (`apps/back`)
 
-## Building
+Fastify backend server.
 
-To build the project run:
+**Scripts:**
 
-```bash
-ng build
-```
+- `bun run dev` - Start dev server with hot reload (port 3000)
+- `bun run build` - Build for production
+- `bun start` - Start production server
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Monorepo Management
 
-## Running unit tests
+This is a bun workspace monorepo. Dependencies are managed at the root level.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Commands
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+**Install dependencies:**
 
 ```bash
-ng e2e
+bun install
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+**Run from root (all apps):**
 
-## Additional Resources
+```bash
+bun run -r start  # Run start script in all workspaces
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Run specific app:**
+
+```bash
+cd apps/front
+bun start
+```
+
+```bash
+cd apps/back
+bun run dev
+```
+
+## Development Workflow
+
+1. Install dependencies from the root:
+
+   ```bash
+   bun install
+   ```
+
+2. Start the frontend:
+
+   ```bash
+   cd apps/front && bun start
+   ```
+
+3. In a new terminal, start the backend:
+   ```bash
+   cd apps/back && bun run dev
+   ```
+
+Both services will run on their respective ports:
+
+- Frontend: http://localhost:4200
+- Backend: http://localhost:3000

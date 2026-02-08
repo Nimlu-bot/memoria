@@ -12,7 +12,8 @@
     "importHelpers": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "UI/*": ["src/shared/ui/*"]
     }
   },
   "angularCompilerOptions": {

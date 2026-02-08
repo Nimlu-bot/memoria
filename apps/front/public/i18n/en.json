@@ -1,6 +1,28 @@
 {
-    "login": {
-        "welcome": "Welcome to Memoria!",
-        "signIn": "Sign in to continue"
+    "pages": {
+        "login": {
+            "welcome": "Welcome to Memoria!",
+            "signIn": "Sign in to continue"
+        }
+    },
+    "features": {
+        "auth": {
+            "loginForm": {
+                "email": "Email",
+                "password": "Password",
+                "rememberMe": "Remember me",
+                "signIn": "Sign In",
+                "forgotPassword": "Forgot password?",
+                "signUp": "Sign Up",
+                "noAccount": "Don't have an account?"
+            },
+            "registerForm": {
+                "email": "Email",
+                "password": "Password",
+                "rememberMe": "Remember me",
+                "signUp": "Sign Up",
+                "haveAccount": "Already have an account?"
+            }
+        }
     }
 }

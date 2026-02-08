@@ -1,0 +1,19 @@
+<div
+    class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-col items-center justify-center">
+        <div class="rounded-[56px] p-1 mb-8"
+            style="background: linear-gradient(180deg, var(--p-primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+            <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20 rounded-[53px]">
+                <div class="text-center mb-8">
+                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
+                        {{ 'pages.login.welcome' | translate }}
+                    </div>
+                    <span class="text-muted-color font-medium">{{
+                        'pages.login.signIn' | translate
+                        }}</span>
+                </div>
+                <m-login-form />
+            </div>
+        </div>
+    </div>
+</div>

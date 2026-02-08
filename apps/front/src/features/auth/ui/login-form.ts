@@ -1,0 +1,87 @@
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { RippleModule } from 'primeng/ripple';
+import { TranslatePipe } from '@ngx-translate/core';
+
+@Component({
+  selector: 'm-login-form',
+  imports: [
+    ButtonModule,
+    CheckboxModule,
+    InputTextModule,
+    PasswordModule,
+    FormsModule,
+    RouterModule,
+    RippleModule,
+    TranslatePipe,
+  ],
+  template: `
+    <div>
+      <label
+        for="email1"
+        class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
+        >{{ 'features.auth.loginForm.email' | translate }}</label
+      >
+      <input
+        pInputText
+        id="email1"
+        type="text"
+        placeholder="{{ 'features.auth.loginForm.email' | translate }}"
+        class="w-full md:w-120 mb-8"
+        [(ngModel)]="email"
+      />
+
+      <label
+        for="password1"
+        class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
+        >{{ 'features.auth.loginForm.password' | translate }}</label
+      >
+      <p-password
+        id="password1"
+        [(ngModel)]="password"
+        placeholder="{{ 'features.auth.loginForm.password' | translate }}"
+        [toggleMask]="true"
+        class="mb-4"
+        [fluid]="true"
+        [feedback]="false"
+      ></p-password>
+
+      <div class="flex items-center justify-between mt-2 mb-8 gap-8">
+        <div class="flex items-center">
+          <p-checkbox [(ngModel)]="checked" id="rememberme1" binary class="mr-2"></p-checkbox>
+          <label for="rememberme1" class="text-surface-900 dark:text-surface-0">{{
+            'features.auth.loginForm.rememberMe' | translate
+          }}</label>
+        </div>
+        <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">{{
+          'features.auth.loginForm.forgotPassword' | translate
+        }}</span>
+      </div>
+      <p-button
+        label="{{ 'features.auth.loginForm.signIn' | translate }}"
+        styleClass="w-full"
+        routerLink="/home"
+      ></p-button>
+      <div class="mt-4 text-center text-surface-900 dark:text-surface-0">
+        {{ 'features.auth.loginForm.noAccount' | translate }}
+        <p-button
+          label="{{ 'features.auth.loginForm.signUp' | translate }}"
+          link
+          routerLink="/auth/register"
+        ></p-button>
+      </div>
+    </div>
+  `,
+})
+export class LoginForm {
+  email: string = '';
+
+  password: string = '';
+
+  checked: boolean = false;
+}

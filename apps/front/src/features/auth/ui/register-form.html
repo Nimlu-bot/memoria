@@ -1,0 +1,27 @@
+<div>
+    <p-toast position="top-right" />
+
+    <label for="name1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{
+        'features.auth.registerForm.name' | translate }}</label>
+    <input pInputText id="name1" type="text" placeholder="{{ 'features.auth.registerForm.name' | translate }}"
+        class="w-full md:w-120 mb-8" [(ngModel)]="name" [disabled]="authService.isLoading()" />
+
+    <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{
+        'features.auth.registerForm.email' | translate }}</label>
+    <input pInputText id="email1" type="email" placeholder="{{ 'features.auth.registerForm.email' | translate }}"
+        class="w-full md:w-120 mb-8" [(ngModel)]="email" [disabled]="authService.isLoading()" />
+
+    <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">{{
+        'features.auth.registerForm.password' | translate }}</label>
+    <p-password id="password1" [(ngModel)]="password"
+        placeholder="{{ 'features.auth.registerForm.password' | translate }}" [toggleMask]="true"
+        class="w-full md:w-120 mb-8" [fluid]="true" [feedback]="false"
+        [disabled]="authService.isLoading()"></p-password>
+
+    <p-button label="{{ 'features.auth.registerForm.signUp' | translate }}" styleClass="w-full"
+        (onClick)="handleSignUp()" [loading]="authService.isLoading()" [disabled]="authService.isLoading()"></p-button>
+    <div class="mt-4 text-center text-surface-900 dark:text-surface-0">
+        {{ 'features.auth.registerForm.haveAccount' | translate }}
+        <p-button label="{{ 'features.auth.loginForm.signIn' | translate }}" link routerLink="/auth/login"></p-button>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -7,9 +7,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthService } from '../api/auth.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'm-login-form',
+  templateUrl: './login-form.html',
   imports: [
     ButtonModule,
     CheckboxModule,
@@ -19,69 +23,38 @@ import { TranslatePipe } from '@ngx-translate/core';
     RouterModule,
     RippleModule,
     TranslatePipe,
+    ToastModule,
   ],
-  template: `
-    <div>
-      <label
-        for="email1"
-        class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
-        >{{ 'features.auth.loginForm.email' | translate }}</label
-      >
-      <input
-        pInputText
-        id="email1"
-        type="text"
-        placeholder="{{ 'features.auth.loginForm.email' | translate }}"
-        class="w-full md:w-120 mb-8"
-        [(ngModel)]="email"
-      />
-
-      <label
-        for="password1"
-        class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2"
-        >{{ 'features.auth.loginForm.password' | translate }}</label
-      >
-      <p-password
-        id="password1"
-        [(ngModel)]="password"
-        placeholder="{{ 'features.auth.loginForm.password' | translate }}"
-        [toggleMask]="true"
-        class="mb-4"
-        [fluid]="true"
-        [feedback]="false"
-      ></p-password>
-
-      <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-        <div class="flex items-center">
-          <p-checkbox [(ngModel)]="checked" id="rememberme1" binary class="mr-2"></p-checkbox>
-          <label for="rememberme1" class="text-surface-900 dark:text-surface-0">{{
-            'features.auth.loginForm.rememberMe' | translate
-          }}</label>
-        </div>
-        <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">{{
-          'features.auth.loginForm.forgotPassword' | translate
-        }}</span>
-      </div>
-      <p-button
-        label="{{ 'features.auth.loginForm.signIn' | translate }}"
-        styleClass="w-full"
-        routerLink="/home"
-      ></p-button>
-      <div class="mt-4 text-center text-surface-900 dark:text-surface-0">
-        {{ 'features.auth.loginForm.noAccount' | translate }}
-        <p-button
-          label="{{ 'features.auth.loginForm.signUp' | translate }}"
-          link
-          routerLink="/auth/register"
-        ></p-button>
-      </div>
-    </div>
-  `,
+  providers: [MessageService],
 })
 export class LoginForm {
-  email: string = '';
+  protected readonly authService = inject(AuthService);
+  protected readonly messageService = inject(MessageService);
 
-  password: string = '';
+  protected email = '';
+  protected password = '';
+  protected rememberMe = false;
 
-  checked: boolean = false;
+  protected async handleSignIn() {
+    if (!this.email || !this.password) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please enter email and password',
+        life: 5000,
+      });
+      return;
+    }
+
+    const success = await this.authService.signIn(this.email, this.password, this.rememberMe);
+
+    if (!success && this.authService.error()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: this.authService.error()!,
+        life: 5000,
+      });
+    }
+  }
 }

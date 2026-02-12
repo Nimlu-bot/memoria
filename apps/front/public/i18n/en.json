@@ -17,6 +17,7 @@
                 "noAccount": "Don't have an account?"
             },
             "registerForm": {
+                "name": "Name",
                 "email": "Email",
                 "password": "Password",
                 "rememberMe": "Remember me",

@@ -1,6 +1,29 @@
 {
-    "login": {
-        "welcome": "Добро пожаловать в Memoria!",
-        "signIn": "Войдите, чтобы продолжить"
+    "pages": {
+        "login": {
+            "welcome": "Добро пожаловать в Memoria!",
+            "signIn": "Войдите, чтобы продолжить"
+        }
+    },
+    "features": {
+        "auth": {
+            "loginForm": {
+                "email": "Электронная почта",
+                "password": "Пароль",
+                "rememberMe": "Запомнить меня",
+                "signIn": "Войти",
+                "forgotPassword": "Забыли пароль?",
+                "signUp": "Регистрация",
+                "noAccount": "Нет аккаунта?"
+            },
+            "registerForm": {
+                "name": "Имя",
+                "email": "Электронная почта",
+                "password": "Пароль",
+                "rememberMe": "Запомнить меня",
+                "signUp": "Регистрация",
+                "haveAccount": "Уже есть аккаунт?"
+            }
+        }
     }
 }

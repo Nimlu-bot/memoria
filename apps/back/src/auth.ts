@@ -18,6 +18,14 @@ const pool = new Pool({
 });
 
 const isProduction = process.env.NODE_ENV === "production";
+const port = parseInt(process.env.PORT || "4000", 10);
+const host = process.env.HOST || "0.0.0.0";
+
+// Generate server origins for all ways it can be accessed
+const serverOrigins =
+  host === "0.0.0.0"
+    ? [`http://localhost:${port}`, `http://127.0.0.1:${port}`]
+    : [`http://${host}:${port}`];
 
 export const auth = betterAuth({
   database: pool,
@@ -49,8 +57,10 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [
+    ...serverOrigins, // Current server origins (for served frontend)
     "http://localhost:8081", // Expo dev server
     "http://localhost:4200", // Angular dev server
+    "http://127.0.0.1:4200", // Angular dev server (localhost variant)
     process.env.CLIENT_ORIGIN || "",
   ].filter(Boolean),
   secret: process.env.BETTER_AUTH_SECRET,

@@ -3,16 +3,17 @@ import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
+import { credentialsInterceptor } from '@/shared/lib/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([credentialsInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: '/i18n/',

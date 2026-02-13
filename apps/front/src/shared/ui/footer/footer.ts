@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'm-home',
+  selector: 'm-footer',
   standalone: true,
-  template: `<div>home page</div>`,
+  templateUrl: './footer.html',
+  styleUrl: './footer.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePage {}
+export class Footer {}

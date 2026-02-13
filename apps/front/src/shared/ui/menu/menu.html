@@ -1,0 +1,11 @@
+<div class="relative">
+    <button pButton type="button" icon="pi pi-bars" class="p-button-rounded p-button-text" (click)="toggleMenu()"
+        aria-label="Toggle menu"></button>
+
+    @if (isOpen()) {
+    <div class="overlay" (click)="closeMenu()"></div>
+    <div class="slide-menu">
+        <p-menu [model]="menuItems" [popup]="false"></p-menu>
+    </div>
+    }
+</div>

@@ -17,6 +17,8 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const auth = betterAuth({
   database: pool,
   emailAndPassword: {
@@ -48,8 +50,19 @@ export const auth = betterAuth({
   },
   trustedOrigins: [
     "http://localhost:8081", // Expo dev server
+    "http://localhost:4200", // Angular dev server
     process.env.CLIENT_ORIGIN || "",
   ].filter(Boolean),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
+  advanced: {
+    useSecureCookies: isProduction,
+    defaultCookieAttributes: {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "lax",
+      path: "/",
+    },
+    disableCSRFCheck: false,
+  },
 });

@@ -1,36 +1,43 @@
 import { LoginPage, RegisterPage } from '@/pages/auth';
-import { Routes, Router } from '@angular/router';
-import { inject } from '@angular/core';
-
-// Auth guard that redirects unauthenticated users to login
-export const authGuard = (route: any, state: any) => {
-  const router = inject(Router);
-  const isAuthenticated = localStorage.getItem('token') !== null;
-
-  if (!isAuthenticated) {
-    // return router.createUrlTree(['/login']);
-    return true;
-  }
-  return true;
-};
+import { Routes } from '@angular/router';
+import { authGuard, noAuthGuard } from '@/shared/lib';
+import { AuthLayout, AuthenticatedLayout } from '@/shared/ui';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
-    path: 'auth/login',
-    component: LoginPage,
-  },
-  {
-    path: 'auth/register',
-    component: RegisterPage,
+    path: 'auth',
+    component: AuthLayout,
+    canActivate: [noAuthGuard],
+    children: [
+      {
+        path: 'login',
+        component: LoginPage,
+      },
+      {
+        path: 'register',
+        component: RegisterPage,
+      },
+      {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: 'home',
-    loadComponent: () => import('@/pages/home').then((m) => m.HomePage),
+    component: AuthenticatedLayout,
     canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('@/pages/home').then((m) => m.HomePage),
+      },
+    ],
   },
 ];

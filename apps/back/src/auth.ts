@@ -16,6 +16,15 @@ if (!process.env.BETTER_AUTH_URL) {
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? {
+          rejectUnauthorized: true,
+          ca: process.env.DATABASE_SSL_CA
+            ? process.env.DATABASE_SSL_CA.split("\\n").join("\n")
+            : undefined,
+        }
+      : false,
 });
 
 const isProduction = process.env.NODE_ENV === "production";

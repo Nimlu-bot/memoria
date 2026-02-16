@@ -36,13 +36,21 @@ const fastify = Fastify({
 });
 
 // CORS configuration
+const allowedOrigins = [
+  process.env.CLIENT_ORIGIN || "http://localhost:8081", // Mobile/React Native
+  "http://localhost:4200", // Angular dev server
+  "http://127.0.0.1:4200", // Angular dev server (localhost variant)
+  "http://localhost", // Capacitor WebView
+  "capacitor://localhost", // Capacitor scheme
+];
+
+// Add deployed frontend URL if in production
+if (process.env.NODE_ENV === "production" && process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 await fastify.register(fastifyCors, {
-  origin: [
-    process.env.CLIENT_ORIGIN || "http://localhost:8081",
-    "http://localhost:4200", // Angular dev server
-    "http://localhost", // Capacitor WebView
-    "capacitor://localhost", // Capacitor scheme
-  ].filter(Boolean),
+  origin: allowedOrigins.filter(Boolean),
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true, // Required for cookies

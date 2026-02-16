@@ -5,7 +5,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { authClient } from '@/shared/api/auth-client';
+import { SessionService } from '@/shared/api/session.service';
 
 /**
  * Guard that protects routes requiring authentication
@@ -16,11 +16,10 @@ export const authGuard: CanActivateFn = async (
   state: RouterStateSnapshot,
 ) => {
   const router = inject(Router);
+  const sessionService = inject(SessionService);
 
   try {
-    const { data: session, error } = await authClient.getSession();
-
-    if (!session || error) {
+    if (!sessionService.session()) {
       return router.createUrlTree(['/auth/login']);
     }
 
@@ -40,11 +39,10 @@ export const noAuthGuard: CanActivateFn = async (
   state: RouterStateSnapshot,
 ) => {
   const router = inject(Router);
+  const sessionService = inject(SessionService);
 
   try {
-    const { data: session } = await authClient.getSession();
-
-    if (session) {
+    if (sessionService.session()) {
       return router.createUrlTree(['/home']);
     }
 

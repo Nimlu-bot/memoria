@@ -8,7 +8,14 @@ const baseURL = typeof window !== 'undefined' ? `${window.location.origin}/api/a
 export const authClient = createAuthClient({
   baseURL,
   fetchOptions: {
-    credentials: 'include', // Required for sending cookies with requests
+    // credentials: 'exclude', // Don't send cookies, we use token-based auth
+    auth: {
+      type: 'Bearer',
+      token: () => {
+        // Get the token from localStorage for Bearer token authentication (mobile/Capacitor)
+        return typeof window !== 'undefined' ? localStorage.getItem('auth_token') || '' : '';
+      },
+    },
     onError: (error) => {
       console.error('Auth error:', error);
     },

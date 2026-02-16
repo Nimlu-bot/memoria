@@ -1,4 +1,9 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideAppInitializer,
+  inject,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -9,6 +14,7 @@ import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { credentialsInterceptor } from '@/shared/lib/interceptors';
+import { SessionService } from '@/shared/api/session.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,5 +38,6 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
+    provideAppInitializer(() => inject(SessionService).initialize()),
   ],
 };

@@ -40,6 +40,8 @@ await fastify.register(fastifyCors, {
   origin: [
     process.env.CLIENT_ORIGIN || "http://localhost:8081",
     "http://localhost:4200", // Angular dev server
+    "http://localhost", // Capacitor WebView
+    "capacitor://localhost", // Capacitor scheme
   ].filter(Boolean),
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],

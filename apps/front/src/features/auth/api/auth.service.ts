@@ -1,12 +1,14 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { authClient } from '@/shared/api/auth-client';
+import { SessionService } from '@/shared/api/session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly router = inject(Router);
+  private readonly sessionService = inject(SessionService);
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -26,6 +28,8 @@ export class AuthService {
         return false;
       }
 
+      // Wait for session to be updated before navigating
+      await this.sessionService.refetch();
       await this.router.navigate(['/home']);
       return true;
     } catch (err) {
@@ -54,6 +58,8 @@ export class AuthService {
         return false;
       }
 
+      // Wait for session to be updated before navigating
+      await this.sessionService.refetch();
       await this.router.navigate(['/home']);
       return true;
     } catch (err) {
@@ -67,6 +73,11 @@ export class AuthService {
   async signOut() {
     try {
       await authClient.signOut();
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+      }
+      // Wait for session to be cleared before navigating
+      await this.sessionService.refetch();
       await this.router.navigate(['/auth/login']);
     } catch (err) {
       console.error('Sign out error:', err);

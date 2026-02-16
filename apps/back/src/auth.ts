@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { bearer } from "better-auth/plugins";
 import { Pool } from "pg";
 
 if (!process.env.DATABASE_URL) {
@@ -29,6 +30,7 @@ const serverOrigins =
 
 export const auth = betterAuth({
   database: pool,
+  plugins: [bearer()], // Enable Bearer token authentication for mobile/Capacitor apps
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false, // Disabled as per requirements
@@ -68,7 +70,7 @@ export const auth = betterAuth({
   advanced: {
     useSecureCookies: isProduction,
     defaultCookieAttributes: {
-      httpOnly: true,
+      httpOnly: true, // Keep httpOnly true for security on web (can't be accessed by JS)
       secure: isProduction,
       sameSite: "lax",
       path: "/",

@@ -7,6 +7,9 @@ declare interface Env {
   [key: string]: any;
 }
 
+// Platform type for Capacitor runtime detection
+declare type CapacitorPlatform = 'web' | 'ios' | 'android';
+
 // Choose how to access the environment variables.
 // Remove the unused options.
 

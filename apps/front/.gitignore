@@ -1,4 +1,7 @@
 /.angular/cache
 .env
+.env.*
 /node_modules
 /dist
+/android
+/ios

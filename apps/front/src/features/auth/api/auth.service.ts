@@ -1,7 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { authClient } from '@/shared/api/auth-client';
+import { createMemoriaAuthClient } from '@/shared/api';
 import { SessionService } from '@/shared/api/session.service';
+import { EnvironmentService } from '@/shared/config';
 
 @Injectable({
   providedIn: 'root',
@@ -9,15 +10,25 @@ import { SessionService } from '@/shared/api/session.service';
 export class AuthService {
   private readonly router = inject(Router);
   private readonly sessionService = inject(SessionService);
+  private readonly environmentService = inject(EnvironmentService);
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
+
+  /**
+   * Get the auth client - uses correct API URL based on platform
+   */
+  private getAuthClient() {
+    const apiBaseUrl = this.environmentService.getApiBaseUrl();
+    return createMemoriaAuthClient(apiBaseUrl);
+  }
 
   async signIn(email: string, password: string, rememberMe: boolean = false) {
     this.isLoading.set(true);
     this.error.set(null);
 
     try {
-      const result = await authClient.signIn.email({
+      const client = this.getAuthClient();
+      const result = await client.signIn.email({
         email,
         password,
         rememberMe,
@@ -26,6 +37,11 @@ export class AuthService {
       if (result.error) {
         this.error.set(result.error.message || 'Failed to sign in');
         return false;
+      }
+
+      // Store token immediately from sign-in response
+      if (result.data?.token && typeof window !== 'undefined') {
+        localStorage.setItem('auth_token', result.data.token);
       }
 
       // Wait for session to be updated before navigating
@@ -51,11 +67,17 @@ export class AuthService {
         name: name || '',
       };
 
-      const result = await authClient.signUp.email(signUpData);
+      const client = this.getAuthClient();
+      const result = await client.signUp.email(signUpData);
 
       if (result.error) {
         this.error.set(result.error.message || 'Failed to sign up');
         return false;
+      }
+
+      // Store token immediately from sign-up response
+      if (result.data?.token && typeof window !== 'undefined') {
+        localStorage.setItem('auth_token', result.data.token);
       }
 
       // Wait for session to be updated before navigating
@@ -72,7 +94,8 @@ export class AuthService {
 
   async signOut() {
     try {
-      await authClient.signOut();
+      const client = this.getAuthClient();
+      await client.signOut();
       if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token');
       }

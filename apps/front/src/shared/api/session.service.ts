@@ -1,5 +1,6 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
-import { authClient } from '@/shared/api/auth-client';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { createMemoriaAuthClient } from '@/shared/api/auth-client';
+import { EnvironmentService } from '@/shared/config/environment.service';
 
 export interface User {
   id: string;
@@ -27,6 +28,8 @@ export interface Session {
   providedIn: 'root',
 })
 export class SessionService {
+  private readonly environmentService = inject(EnvironmentService);
+
   private readonly sessionData = signal<Session | null>(null);
   private readonly loading = signal(false);
   private readonly refetching = signal(false);
@@ -48,6 +51,13 @@ export class SessionService {
   private refetchFn: (() => Promise<void>) | null = null;
   private sessionUpdateResolvers: Array<() => void> = [];
 
+  /**
+   * Get the auth client - uses correct API URL based on platform
+   */
+  private getAuthClient() {
+    const apiBaseUrl = this.environmentService.getApiBaseUrl();
+    return createMemoriaAuthClient(apiBaseUrl);
+  }
   /**
    * Store authentication token in localStorage
    * @param token The JWT token from authentication
@@ -78,8 +88,11 @@ export class SessionService {
   }
 
   constructor() {
+    // Get the auth client with the correct API URL for the current platform
+    const authClientInstance = this.getAuthClient();
+
     // Subscribe to better-auth's session changes
-    this.unsubscribe = authClient.useSession.subscribe((value) => {
+    this.unsubscribe = authClientInstance.useSession.subscribe((value) => {
       const hadSession = !!this.sessionData();
 
       console.log('📡 Session subscription update:', {
